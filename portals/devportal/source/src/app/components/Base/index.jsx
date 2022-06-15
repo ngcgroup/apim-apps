@@ -228,6 +228,8 @@ class Layout extends React.Component {
             selected: 'home',
         };
         this.toggleGlobalNavBar = this.toggleGlobalNavBar.bind(this);
+        this.signin = this.signin.bind(this);
+
         const { history } = props;
         history.listen((location) => {
             this.detectCurrentMenu(location);
@@ -259,6 +261,13 @@ class Layout extends React.Component {
 
     handleRequestCloseUserMenu = () => {
         this.setState({ openUserMenu: false });
+    };
+
+    signin = () => {
+        const pageUrl = new URL(window.location);
+        const tenant = pageUrl.searchParams.get('tenant') ?? '';
+        const tenantSuffix = (tenant === '' ? '' : '?tenant=' + tenant);
+        window.location = app.context + '/services/configs' + tenantSuffix;
     };
 
     /**
@@ -613,7 +622,7 @@ class Layout extends React.Component {
                                             id='itest-devportal-sign-in'
                                             className={classes.userLink}
                                             component='a'
-                                            href={app.context + '/services/configs'}
+                                            onClick={this.signin}
                                         >
                                             <Icon>person</Icon>
                                             <FormattedMessage id='Base.index.sign.in' defaultMessage=' Sign-in' />

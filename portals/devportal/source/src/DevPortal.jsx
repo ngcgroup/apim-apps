@@ -98,7 +98,7 @@ class DevPortal extends React.Component {
                 }
                 if (Settings.app.isPassive && !AuthManager.getUser()
                     && !sessionStorage.getItem(CONSTS.ISLOGINPERMITTED) && !this.state.isNonAnonymous) {
-                    this.checkLoginUser();
+                    this.checkLoginUser(tenant);
                 }
             })
             .catch((error) => {
@@ -302,10 +302,16 @@ class DevPortal extends React.Component {
      * If the passive mode is enabled then this method will check whether
      * a user is already logged into the publisher.
      */
-    checkLoginUser() {
+    checkLoginUser(tenantParam) {
+        let { tenantDomain } = this.state;
+        if (tenantDomain == null) {
+            tenantDomain = tenantParam;
+            this.setTenantDomain(tenantDomain);
+        }
         if (!sessionStorage.getItem(CONSTS.LOGINSTATUS)) {
             sessionStorage.setItem(CONSTS.LOGINSTATUS, 'check-Login-status');
-            window.location = Settings.app.context + '/services/configs?loginPrompt=false';
+            window.location = Settings.app.context + '/services/configs?loginPrompt=false'
+                                         + (tenantDomain == null) ? '' : '&tenant=' + tenantDomain;
             this.setState({ redirecting: true });
         } else if (sessionStorage.getItem(CONSTS.LOGINSTATUS)) {
             sessionStorage.removeItem(CONSTS.LOGINSTATUS);

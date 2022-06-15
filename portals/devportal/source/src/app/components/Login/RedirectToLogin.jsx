@@ -20,7 +20,9 @@ import React from 'react';
 import Settings from 'Settings';
 import { FormattedMessage } from 'react-intl';
 
-const page = Settings.app.context + '/services/configs';
+const pageUrl = new URL(window.location);
+const tenant = pageUrl.searchParams.get('tenant') ?? '';
+const page = Settings.app.context + '/services/configs' + (tenant === '' ? '' : '?tenant=' + tenant);
 
 /**
  *
